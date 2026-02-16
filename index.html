@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чек ПРО</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="header">
+    <div class="container header-inner">
+
+        <div class="logo-text">
+            ЧЕК <span class="accent">ПРО</span>
+        </div>
+
+        <div class="header-right">
+    <div class="status-big">
+        <span class="check-icon"></span>
+        Работаем круглосуточно
+    </div>
+
+    <button type="button" class="big-btn open-modal">
+    Перезвоните мне
+    </button>
+</div>
+</header>
+
+
+<section class="hero">
+    <div class="container hero-inner">
+        <div class="hero-text">
+            <h1>
+                <span class="accent">4 из 10 наших клиентов</span>
+                обращаются после неудачного опыта сотрудничества
+                с другими компаниями, а после остаются с нами
+            </h1>
+
+            <a href="#" class="reviews-link"> Посмотрите отзывы о нас  <span class="arrow">→</span> </a>
+        </div>
+        <div class="hero-image">
+            <img src="images/image1.jpeg" alt="Отзывы">
+        </div>
+    </div>
+</section>
+
+
+<section class="cta">
+    <div class="container cta-inner">
+
+        <!-- Левая часть -->
+        <div class="cta-left">
+            <h2>Остались вопросы?</h2>
+            <p>Позвоните нам или оставьте заявку</p>
+        </div>
+
+        <!-- Правая часть как в хедере -->
+        <div class="cta-right">
+            <div class="status-big">
+                <span class="check-icon"></span>
+                Работаем круглосуточно
+            </div>
+
+            <button type="button" class="big-btn open-modal">
+            Перезвоните мне
+            </button>
+        </div>
+
+    </div>
+</section>
+
+
+<footer class="footer">
+    <div class="container footer-inner">
+        <p>© ООО "БИЗ ПРО" - все права защищены</p>
+        <a href="#">Политика конфиденциальности</a>
+    </div>
+</footer>
+<div class="modal-overlay" id="modal">
+    <div class="modal">
+
+        <button class="modal-close" id="closeModal">×</button>
+
+        <h3>Оставьте заявку</h3>
+
+        <form id="popupForm">
+            <input type="text" id="popupName" placeholder="Ваше имя" required>
+            <input type="tel" id="popupPhone" placeholder="Телефон" required>
+
+            <button type="submit" class="big-btn modal-btn">
+                Отправить
+            </button>
+        </form>
+
+    </div>
+</div>
+<script>
+const modal = document.getElementById("modal");
+const closeBtn = document.getElementById("closeModal");
+const openButtons = document.querySelectorAll(".open-modal");
+const form = document.getElementById("popupForm");
+
+openButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        modal.classList.add("active");
+    });
+});
+
+closeBtn.addEventListener("click", () => {
+    modal.classList.remove("active");
+});
+
+modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+        modal.classList.remove("active");
+    }
+});
+
+
+// ===== ОТПРАВКА НА NODE =====
+
+form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("popupName").value;
+    const phone = document.getElementById("popupPhone").value;
+
+    try {
+        const response = await fetch("http://localhost:3000/send", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, phone })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            window.location.href = "thank-you.html";
+        } else {
+            alert("Ошибка отправки. Попробуйте ещё раз.");
+        }
+
+    } catch (error) {
+        alert("Сервер не отвечает");
+    }
+});
+</script>
+</body>
+</html>
